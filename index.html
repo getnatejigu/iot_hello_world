@@ -1,0 +1,85 @@
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<style type="text/css">
+		  .on  { background:green; }
+		  .off { background:red; }
+		  
+		  input[type=button] {
+			 color: white;
+			 font-size: 2.5em;
+		 }
+	</style>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./justgage-1.2.2/raphael-2.1.4.min.js"></script>
+	<script src="./justgage-1.2.2/justgage.js"></script>
+	<script>
+		var accessToken = "92d261ccb8baa27e84f48a9c77306de752111a39";
+		var deviceID = "240028000447343138333038";
+		var url = "https://api.spark.io/v1/devices/" + deviceID + "/volts";
+
+		function callback(data, status) {
+			if(status == "success") {
+				volts = parseFloat(data.result);
+				volts = volts.toFixed(2);
+				setTimeout(getReading, 10000);
+				g.refresh(volts);
+				
+			} else {
+				alert("There is a problem");
+			}
+		}
+
+		function getReading() {
+			$.get(url, {access_token: accessToken}, callback);
+		}
+	</script>
+
+<script>
+var accessToken = "92d261ccb8baa27e84f48a9c77306de752111a39";
+var deviceID = "240028000447343138333038"
+var url = "https://api.spark.io/v1/devices/" + deviceID + "/relaycontrol";
+function toggleState(item, relayNumber){
+	function setRelay(message){
+		$.post(url, {params: message, access_token: accessToken}, callback);
+	}  
+	function callback(data, status){
+		if (data.return_value == 1) {
+			if (item.className == "on") {
+				item.className="off";
+			}
+			else {
+				item.className="on";
+			}
+		}
+		else
+		{
+			alert("Could not Connect to Photon");
+		}
+	}
+   if(item.className == "on") {
+	  setRelay(relayNumber + "0");
+   } else {
+	  setRelay(relayNumber + "1");
+   }
+}
+</script>
+
+
+</head>	
+
+<body>
+
+<h1>Relay Control</h1>	
+	<div id="gauge" class="100x80px"></div>
+
+	
+<input type="button" id="btn" value="Switch" class="off" onclick="toggleState(this, '1')" /> <br/>
+<input type="button" id="btn" value="Relay" class="off" onclick="toggleState(this, '1')" /> <br/>
+
+
+</body>
+</html>
+
