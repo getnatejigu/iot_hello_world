@@ -8,3 +8,5 @@ var g = new JustGage({
 					decimals: 2
 					});
 getReading();
+
+//hello
